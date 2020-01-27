@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router, RouterEvent, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,21 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'DemoApp';
+  title = 'Angular Store';
+  isDarkTheme = false;
+
+  constructor(
+    private router: Router,
+    private titleService: Title) {
+    
+    router
+      .events
+      .pipe(
+        filter((evt:RouterEvent) => evt instanceof NavigationEnd && evt.url == '/products')
+      )
+      .subscribe(() => {
+          this.titleService.setTitle('Products List');
+      })
+      
+  }
 }
